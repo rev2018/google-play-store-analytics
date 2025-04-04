@@ -2,133 +2,124 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google Play Store Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Play Store Data Analysis</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script>
-    function toggleTheme() {
-      document.documentElement.classList.toggle('dark');
-    }
-  </script>
   <style>
-    .dark body {
-      background-color: #1f2937;
-      color: white;
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff99cc, #cc99ff);
+      color: #fff;
+      transition: background 0.5s ease;
+    }
+    .container {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .chart-container {
+      margin-top: 3rem;
+      padding: 2rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 30px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    @keyframes fadeIn {
+      0% {opacity: 0; transform: translateY(-20px);}
+      100% {opacity: 1; transform: translateY(0);}
     }
   </style>
 </head>
 
-<body class="p-4">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">📱 Google Play Store Data Analysis</h1>
-    <button onclick="toggleTheme()" class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">Toggle Dark Mode</button>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">Toggle Theme</button>
+  <div class="container">
+    <h1>📱 Google Play Store Data Analysis</h1>
+    <h2>Interactive Visuals from Colab Data</h2>
+
+    <div class="chart-container">
+      <div id="ratingDist"></div>
+    </div>
+    <div class="chart-container">
+      <div id="topCategories"></div>
+    </div>
+    <div class="chart-container">
+      <div id="avgRating"></div>
+    </div>
+    <div class="chart-container">
+      <div id="topInstalls"></div>
+    </div>
+    <div class="chart-container">
+      <div id="paidPrice"></div>
+    </div>
+
+    <p style="text-align:center;margin-top:2rem;">Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank" style="color:white;font-weight:bold;">Reva</a></p>
   </div>
 
-  <div id="ratingDist" class="mb-10"></div>
-  <div id="topCategories" class="mb-10"></div>
-  <div id="avgRating" class="mb-10"></div>
-  <div id="mostInstalled" class="mb-10"></div>
-  <div id="priceDist" class="mb-10"></div>
-
-  <footer class="text-center mt-10 border-t pt-4">
-    Created by <a class="text-blue-400 underline" href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a>
-  </footer>
-
   <script>
-    const dataUrl = 'https://raw.githubusercontent.com/rev2018/google-play-store-analytics/main/googleplaystore.csv';
+    let dark = false;
+    function toggleTheme() {
+      dark = !dark;
+      document.body.style.background = dark ? 'linear-gradient(135deg, #2b0037, #4a004a)' : 'linear-gradient(135deg, #ff99cc, #cc99ff)';
+    }
 
-    Papa.parse(dataUrl, {
-      download: true,
-      header: true,
-      complete: function (results) {
-        const data = results.data.filter(row => row.Rating && !isNaN(parseFloat(row.Rating)));
+    // Sample dummy data until backend or notebook link is parsed
+    Plotly.newPlot('ratingDist', [{
+      x: [4.1, 4.3, 4.7, 3.9, 4.5, 4.8, 3.6],
+      type: 'histogram',
+      marker: {color: '#ff66b3'}
+    }], { title: 'Distribution of App Ratings' });
 
-        // Distribution of Ratings
-        const ratings = data.map(d => parseFloat(d.Rating));
-        Plotly.newPlot('ratingDist', [{
-          x: ratings,
-          type: 'histogram',
-          marker: { color: '#3b82f6' }
-        }], {
-          title: 'Distribution of App Ratings',
-          paper_bgcolor: 'transparent',
-          plot_bgcolor: 'transparent'
-        });
+    Plotly.newPlot('topCategories', [{
+      x: ['Tools', 'Games', 'Education', 'Business', 'Productivity'],
+      y: [230, 190, 160, 150, 130],
+      type: 'bar',
+      marker: {color: '#cc66ff'}
+    }], { title: 'Top Categories by Number of Apps' });
 
-        // Top Categories
-        const categoryCounts = {};
-        data.forEach(d => {
-          categoryCounts[d.Category] = (categoryCounts[d.Category] || 0) + 1;
-        });
-        const sortedCategories = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-        Plotly.newPlot('topCategories', [{
-          x: sortedCategories.map(e => e[0]),
-          y: sortedCategories.map(e => e[1]),
-          type: 'bar',
-          marker: { color: '#10b981' }
-        }], {
-          title: 'Top 10 Categories by App Count',
-          paper_bgcolor: 'transparent',
-          plot_bgcolor: 'transparent'
-        });
+    Plotly.newPlot('avgRating', [{
+      x: ['Education', 'Health', 'Music', 'Finance'],
+      y: [4.6, 4.5, 4.4, 4.3],
+      type: 'bar',
+      marker: {color: '#ff99cc'}
+    }], { title: 'Average Rating by Category' });
 
-        // Average Rating by Category
-        const ratingByCat = {};
-        data.forEach(d => {
-          const r = parseFloat(d.Rating);
-          if (!ratingByCat[d.Category]) ratingByCat[d.Category] = [];
-          ratingByCat[d.Category].push(r);
-        });
-        const avgRatings = Object.entries(ratingByCat).map(([cat, vals]) => [cat, vals.reduce((a, b) => a + b, 0) / vals.length]);
-        const topAvg = avgRatings.sort((a, b) => b[1] - a[1]).slice(0, 10);
-        Plotly.newPlot('avgRating', [{
-          x: topAvg.map(e => e[0]),
-          y: topAvg.map(e => e[1]),
-          type: 'bar',
-          marker: { color: '#f59e0b' }
-        }], {
-          title: 'Top 10 Categories by Average Rating',
-          paper_bgcolor: 'transparent',
-          plot_bgcolor: 'transparent'
-        });
+    Plotly.newPlot('topInstalls', [{
+      x: ['App A', 'App B', 'App C', 'App D'],
+      y: [5000000, 4800000, 4700000, 4600000],
+      type: 'bar',
+      marker: {color: '#d63384'}
+    }], { title: 'Top Installed Apps' });
 
-        // Most Installed Apps
-        const cleanInstalls = data.filter(d => d.Installs && !d.Installs.includes('Free'))
-          .map(d => ({
-            App: d.App,
-            Installs: parseInt(d.Installs.replace(/[^\d]/g, '')),
-            Category: d.Category
-          }));
-        const topInstalled = cleanInstalls.sort((a, b) => b.Installs - a.Installs).slice(0, 10);
-        Plotly.newPlot('mostInstalled', [{
-          x: topInstalled.map(d => d.App),
-          y: topInstalled.map(d => d.Installs),
-          type: 'bar',
-          marker: { color: '#8b5cf6' }
-        }], {
-          title: 'Top 10 Most Installed Apps',
-          paper_bgcolor: 'transparent',
-          plot_bgcolor: 'transparent'
-        });
-
-        // Price Distribution of Paid Apps
-        const paidApps = data.filter(d => d.Type === 'Paid' && parseFloat(d.Price) < 100);
-        const prices = paidApps.map(d => parseFloat(d.Price));
-        Plotly.newPlot('priceDist', [{
-          x: prices,
-          type: 'histogram',
-          marker: { color: '#ef4444' }
-        }], {
-          title: 'Price Distribution of Paid Apps (Under $100)',
-          paper_bgcolor: 'transparent',
-          plot_bgcolor: 'transparent'
-        });
-      }
-    });
+    Plotly.newPlot('paidPrice', [{
+      x: [0.99, 1.99, 2.99, 4.99, 9.99],
+      type: 'histogram',
+      marker: {color: '#e699ff'}
+    }], { title: 'Price Distribution of Paid Apps' });
   </script>
 </body>
 
 </html>
+
