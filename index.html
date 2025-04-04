@@ -154,7 +154,7 @@
     </section>
 
     <div class="search-bar">
-      <input type="text" placeholder="Search for categories" />
+      <input type="text" id="categorySearch" placeholder="Search for categories" onkeyup="filterCharts()" />
     </div>
 
     <div class="chart-container" id="ratingDist"></div>
@@ -171,6 +171,22 @@
   <script>
     function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
+    }
+
+    function filterCharts() {
+      const input = document.getElementById("categorySearch").value.toLowerCase();
+      const charts = ["ratingDist", "topCategories", "avgRating", "topInstalls", "paidPrice"];
+
+      charts.forEach(chartId => {
+        const el = document.getElementById(chartId);
+        if (input === "") {
+          el.style.display = "block";
+        } else if (chartId.toLowerCase().includes(input)) {
+          el.style.display = "block";
+        } else {
+          el.style.display = "none";
+        }
+      });
     }
 
     Plotly.newPlot('ratingDist', [{
