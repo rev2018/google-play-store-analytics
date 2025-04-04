@@ -1,39 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Google Play Store Data Analysis</title>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Play Store Analytics</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f9f9fb;
+      font-family: Arial, sans-serif;
       margin: 0;
-      padding: 0 20px;
+      padding: 0;
+      background: #f2f2f2;
     }
     header {
+      background-color: #6200ea;
+      color: white;
+      padding: 20px;
       text-align: center;
-      padding: 2rem 0;
     }
-    h1 {
-      margin-bottom: 0.5rem;
+    main {
+      padding: 30px;
     }
     section {
-      margin: 2rem 0;
+      background: white;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    .chart-container {
-      margin-top: 1rem;
+    canvas {
+      width: 100% !important;
+      max-width: 800px;
+      height: 400px !important;
+      margin: 0 auto;
+      display: block;
     }
     footer {
       text-align: center;
-      margin-top: 3rem;
-      padding: 2rem;
-      background-color: #eee;
+      padding: 20px;
+      background: #6200ea;
+      color: white;
     }
-    a {
-      color: #0077cc;
+    footer a {
+      color: #ffccff;
       text-decoration: none;
     }
   </style>
@@ -41,121 +50,113 @@
 <body>
   <header>
     <h1>📱 Google Play Store Data Analysis</h1>
-    <p>This dashboard analyzes the Google Play Store dataset and provides visual insights into app categories, ratings, reviews, and installations.</p>
+    <p>This dashboard provides visual insights into app categories, ratings, reviews, and installations.</p>
   </header>
+  <main>
+    <section>
+      <h2>📊 Distribution of App Ratings</h2>
+      <canvas id="ratingsChart"></canvas>
+    </section>
 
-  <section>
-    <h2>📊 Distribution of App Ratings</h2>
-    <div id="ratingDist" class="chart-container"></div>
-  </section>
+    <section>
+      <h2>🏆 Top Categories by Number of Apps</h2>
+      <canvas id="categoriesChart"></canvas>
+    </section>
 
-  <section>
-    <h2>🏆 Top Categories by Number of Apps</h2>
-    <div id="topCategories" class="chart-container"></div>
-  </section>
+    <section>
+      <h2>⭐ Average Rating by Category</h2>
+      <canvas id="avgRatingChart"></canvas>
+    </section>
 
-  <section>
-    <h2>⭐ Average Rating by Category</h2>
-    <div id="avgRatingCat" class="chart-container"></div>
-  </section>
+    <section>
+      <h2>📥 Most Installed Apps</h2>
+      <canvas id="topInstallsChart"></canvas>
+    </section>
 
-  <section>
-    <h2>📥 Most Installed Apps</h2>
-    <div id="mostInstalled" class="chart-container"></div>
-  </section>
-
-  <section>
-    <h2>💰 Price Distribution of Paid Apps</h2>
-    <div id="priceDist" class="chart-container"></div>
-  </section>
-
+    <section>
+      <h2>💰 Price Distribution of Paid Apps</h2>
+      <canvas id="paidAppsChart"></canvas>
+    </section>
+  </main>
   <footer>
-    <p>Created with ❤️ by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a></p>
+    Created with ❤️ by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a>
   </footer>
 
   <script>
-    // Load data from CSV
-    async function loadData() {
-      const response = await fetch("https://raw.githubusercontent.com/rev2018/google-play-store-analytics/main/googleplaystore.csv");
-      const data = await response.text();
-      const rows = data.split("\n").slice(1).map(row => row.split(","));
+    // Dummy data simulation
+    const ratingsData = [1, 2, 3, 4, 5];
+    const ratingsCount = [50, 100, 300, 500, 200];
 
-      const headers = ["App", "Category", "Rating", "Reviews", "Size", "Installs", "Type", "Price", "Content Rating", "Genres", "Last Updated", "Current Ver", "Android Ver"];
+    const categories = ["GAME", "TOOLS", "PRODUCTIVITY", "FINANCE", "SOCIAL"];
+    const categoryCount = [120, 100, 80, 60, 40];
 
-      return rows.map(r => Object.fromEntries(headers.map((h, i) => [h, r[i]])));
-    }
+    const avgRatings = [4.5, 4.4, 4.3, 4.1, 4.0];
 
-    loadData().then(data => {
-      // Clean and parse data
-      data = data.filter(d => d.Rating && !isNaN(d.Rating) && d.Installs && !isNaN(d.Rating));
-      data.forEach(d => {
-        d.Rating = +d.Rating;
-        d.Installs = parseInt(d.Installs.replace(/\+|,/g, '')) || 0;
-        d.Price = parseFloat(d.Price?.replace('$', '')) || 0;
-      });
+    const topApps = ["App A", "App B", "App C", "App D", "App E"];
+    const installs = [1000000, 900000, 800000, 700000, 600000];
 
-      // Chart 1: Rating Distribution
-      const ratings = data.map(d => d.Rating);
-      const ratingTrace = {
-        x: ratings,
-        type: "histogram",
-        marker: { color: "#7f7fff" }
-      };
-      Plotly.newPlot("ratingDist", [ratingTrace], { title: "Distribution of Ratings" });
+    const paidPrice = [0.99, 1.99, 2.99, 4.99, 9.99];
+    const paidCount = [200, 150, 100, 50, 30];
 
-      // Chart 2: Top Categories
-      const catCounts = {};
-      data.forEach(d => catCounts[d.Category] = (catCounts[d.Category] || 0) + 1);
-      const sortedCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-      const catTrace = {
-        x: sortedCats.map(d => d[0]),
-        y: sortedCats.map(d => d[1]),
-        type: "bar",
-        marker: { color: "#00bfa6" }
-      };
-      Plotly.newPlot("topCategories", [catTrace], { title: "Top 10 Categories by App Count" });
+    new Chart(document.getElementById('ratingsChart'), {
+      type: 'bar',
+      data: {
+        labels: ratingsData,
+        datasets: [{
+          label: 'Number of Ratings',
+          data: ratingsCount,
+          backgroundColor: 'rgba(98, 0, 234, 0.7)'
+        }]
+      }
+    });
 
-      // Chart 3: Average Rating by Category
-      const ratingsByCat = {};
-      const countByCat = {};
-      data.forEach(d => {
-        if (!ratingsByCat[d.Category]) {
-          ratingsByCat[d.Category] = 0;
-          countByCat[d.Category] = 0;
-        }
-        ratingsByCat[d.Category] += d.Rating;
-        countByCat[d.Category]++;
-      });
-      const avgRatingCat = Object.entries(ratingsByCat).map(([cat, total]) => [cat, total / countByCat[cat]]);
-      const topAvgRating = avgRatingCat.sort((a, b) => b[1] - a[1]).slice(0, 10);
-      const ratingCatTrace = {
-        x: topAvgRating.map(d => d[0]),
-        y: topAvgRating.map(d => d[1]),
-        type: "bar",
-        marker: { color: "#ff6f61" }
-      };
-      Plotly.newPlot("avgRatingCat", [ratingCatTrace], { title: "Top 10 Categories by Avg Rating" });
+    new Chart(document.getElementById('categoriesChart'), {
+      type: 'bar',
+      data: {
+        labels: categories,
+        datasets: [{
+          label: 'App Count',
+          data: categoryCount,
+          backgroundColor: 'rgba(0, 150, 136, 0.7)'
+        }]
+      }
+    });
 
-      // Chart 4: Most Installed Apps
-      const topInstalled = [...data].sort((a, b) => b.Installs - a.Installs).slice(0, 10);
-      const installedTrace = {
-        x: topInstalled.map(d => d.App),
-        y: topInstalled.map(d => d.Installs),
-        type: "bar",
-        marker: { color: "#ffa600" }
-      };
-      Plotly.newPlot("mostInstalled", [installedTrace], { title: "Top 10 Most Installed Apps" });
+    new Chart(document.getElementById('avgRatingChart'), {
+      type: 'bar',
+      data: {
+        labels: categories,
+        datasets: [{
+          label: 'Avg Rating',
+          data: avgRatings,
+          backgroundColor: 'rgba(255, 193, 7, 0.7)'
+        }]
+      }
+    });
 
-      // Chart 5: Price Distribution
-      const paidApps = data.filter(d => d.Type === 'Paid' && d.Price <= 100);
-      const priceTrace = {
-        x: paidApps.map(d => d.Price),
-        type: "histogram",
-        marker: { color: "#ffb703" }
-      };
-      Plotly.newPlot("priceDist", [priceTrace], { title: "Price Distribution (Paid Apps under $100)" });
+    new Chart(document.getElementById('topInstallsChart'), {
+      type: 'bar',
+      data: {
+        labels: topApps,
+        datasets: [{
+          label: 'Installs',
+          data: installs,
+          backgroundColor: 'rgba(244, 67, 54, 0.7)'
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('paidAppsChart'), {
+      type: 'bar',
+      data: {
+        labels: paidPrice.map(p => `$${p}`),
+        datasets: [{
+          label: 'Number of Paid Apps',
+          data: paidCount,
+          backgroundColor: 'rgba(33, 150, 243, 0.7)'
+        }]
+      }
     });
   </script>
 </body>
 </html>
-
