@@ -6,9 +6,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Google Play Store Analytics</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+    }
     html {
       scroll-behavior: smooth;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+    }
+    .dark-mode {
+      --bg-color: #121212;
+      --text-color: #ffffff;
     }
     nav {
       background-color: #333;
@@ -17,6 +36,10 @@
       position: sticky;
       top: 0;
       z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    nav.shrink {
+      padding: 5px;
     }
     nav ul {
       display: flex;
@@ -34,12 +57,65 @@
     nav ul li a:hover {
       text-decoration: underline;
     }
-    #about {
+    #theme-toggle {
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      padding: 5px 10px;
+      background: #555;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #about, #data-source {
       padding: 2rem;
       text-align: center;
       max-width: 800px;
       margin: auto;
       line-height: 1.5;
+    }
+    .chart-section {
+      margin: 2rem auto;
+      max-width: 1000px;
+      padding: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      background: #f9f9f9;
+      position: relative;
+    }
+    .chart-section button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #333;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 1001;
+      display: none;
+    }
+    footer {
+      background-color: #f0f0f0;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+      border-top: 1px solid #ddd;
+      margin-top: 2rem;
     }
   </style>
 </head>
@@ -50,9 +126,10 @@
     <p>Dive into the trends, ratings, and reviews across apps</p>
   </header>
 
-  <nav>
+  <nav id="navbar">
     <ul>
       <li><a href="#about">About</a></li>
+      <li><a href="#data-source">Source</a></li>
       <li><a href="#scatter-plot">Scatter</a></li>
       <li><a href="#grouped-bar">Bar</a></li>
       <li><a href="#dual-axis">Line</a></li>
@@ -60,6 +137,7 @@
       <li><a href="#box-plot">Box</a></li>
       <li><a href="#downloads-line">Downloads</a></li>
     </ul>
+    <button id="theme-toggle">Toggle Theme</button>
   </nav>
 
   <section id="about">
@@ -71,34 +149,50 @@
     </p>
   </section>
 
+  <section id="data-source" data-aos="fade-up" class="chart-section">
+    <h2>Data Source</h2>
+    <p style="line-height: 1.6;">
+      The dataset used in this project was sourced from 
+      <a href="https://www.kaggle.com/datasets/lava18/google-play-store-apps" target="_blank" style="color: #007BFF; text-decoration: underline;">
+        Kaggle’s Google Play Store Apps dataset
+      </a>. It includes detailed information on app ratings, reviews, installs, genres, size, and more. We performed extensive cleaning, preprocessing, and analysis in Python to extract meaningful patterns and visualize them interactively using Plotly.
+    </p>
+  </section>
+
   <main>
-    <div class="chart-section">
+    <div class="chart-section" data-aos="fade-up">
       <h2>Scatter Plot - Rating vs Reviews</h2>
+      <button onclick="toggleChart('scatter-plot')">Toggle</button>
       <div id="scatter-plot" class="chart-box"></div>
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section" data-aos="fade-up">
       <h2>Grouped Bar Chart - Content Rating</h2>
+      <button onclick="toggleChart('grouped-bar')">Toggle</button>
       <div id="grouped-bar" class="chart-box"></div>
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section" data-aos="fade-up">
       <h2>Dual Axis Line Chart - Rating vs Reviews</h2>
+      <button onclick="toggleChart('dual-axis')">Toggle</button>
       <div id="dual-axis" class="chart-box"></div>
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section" data-aos="fade-up">
       <h2>Pie Chart - Genre Distribution</h2>
+      <button onclick="toggleChart('genre-pie')">Toggle</button>
       <div id="genre-pie" class="chart-box"></div>
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section" data-aos="fade-up">
       <h2>Box Plot - Rating Distribution by Category</h2>
+      <button onclick="toggleChart('box-plot')">Toggle</button>
       <div id="box-plot" class="chart-box"></div>
     </div>
 
-    <div class="chart-section">
+    <div class="chart-section" data-aos="fade-up">
       <h2>Line Chart - App Downloads Over Time</h2>
+      <button onclick="toggleChart('downloads-line')">Toggle</button>
       <div id="downloads-line" class="chart-box"></div>
     </div>
   </main>
@@ -107,8 +201,34 @@
     <p>&copy; 2025 Google Play Store Analytics by Reva</p>
   </footer>
 
+  <div class="back-to-top" onclick="scrollToTop()">↑</div>
+
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="script.js"></script>
+  <script>
+    AOS.init();
+
+    function toggleChart(id) {
+      const chart = document.getElementById(id);
+      chart.style.display = chart.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      const topBtn = document.querySelector('.back-to-top');
+      nav.classList.toggle('shrink', window.scrollY > 10);
+      topBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+
+    document.getElementById('theme-toggle').onclick = () => {
+      document.body.classList.toggle('dark-mode');
+    };
+  </script>
 </body>
 
 </html>
