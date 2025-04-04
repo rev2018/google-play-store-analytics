@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Google Play Store Data Analysis</title>
+  <!-- Plotly Library -->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     :root {
@@ -97,7 +98,8 @@
       margin: auto;
     }
 
-    h1, h2 {
+    h1,
+    h2 {
       text-align: center;
       margin-bottom: 1rem;
     }
@@ -180,76 +182,8 @@
       <input type="text" placeholder="Search for categories" />
     </div>
 
+    <!-- Div containers for graphs -->
     <div class="chart-container" id="ratingDist"></div>
-    <div class="chart-container" id="topCategories"></div>
-    <div class="chart-container" id="avgRating"></div>
-    <div class="chart-container" id="topInstalls"></div>
-    <div class="chart-container" id="paidPrice"></div>
-
-    <div class="footer">
-      Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a>
-    </div>
-  </div>
-
-  <script>
-    function toggleTheme() {
-      const html = document.documentElement;
-      const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      html.setAttribute('data-theme', newTheme);
-    }
-
-    Plotly.newPlot('ratingDist', [{
-      x: [4.1, 4.3, 4.7, 3.9, 4.5, 4.8, 3.6],
-      type: 'histogram',
-      marker: { color: '#ff66b3' }
-    }], {
-      title: 'Distribution of App Ratings',
-      xaxis: { title: 'Rating' },
-      yaxis: { title: 'Number of Apps' }
-    });
-
-    Plotly.newPlot('topCategories', [{
-      x: ['Tools', 'Games', 'Education', 'Business', 'Productivity'],
-      y: [230, 190, 160, 150, 130],
-      type: 'bar',
-      marker: { color: '#cc66ff' }
-    }], {
-      title: 'Top Categories by Number of Apps',
-      xaxis: { title: 'Category' },
-      yaxis: { title: 'App Count' }
-    });
-
-    Plotly.newPlot('avgRating', [{
-      x: ['Education', 'Health', 'Music', 'Finance'],
-      y: [4.6, 4.5, 4.4, 4.3],
-      type: 'bar',
-      marker: { color: '#ff99cc' }
-    }], {
-      title: 'Average Rating by Category',
-      xaxis: { title: 'Category' },
-      yaxis: { title: 'Average Rating' }
-    });
-
-    Plotly.newPlot('topInstalls', [{
-      x: ['WhatsApp', 'Instagram', 'Facebook', 'Snapchat'],
-      y: [5000000000, 3500000000, 5000000000, 1000000000],
-      type: 'bar',
-      marker: { color: '#d63384' }
-    }], {
-      title: 'Top Installed Apps',
-      xaxis: { title: 'App Name' },
-      yaxis: { title: 'Install Count' }
-    });
-
-    Plotly.newPlot('paidPrice', [{
-      x: [0.99, 1.99, 2.99, 4.99, 9.99],
-      type: 'histogram',
-      marker: { color: '#e699ff' }
-    }], {
-      title: 'Price Distribution of Paid Apps',
-      xaxis: { title: 'Price (USD)' },
-      yaxis: { title: 'Number of Apps' }
-    });
-  </script>
-</body>
-</html>
+    <div class="chart
+::contentReference[oaicite:8]{index=8}
+ 
