@@ -1,44 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Play Store Analytics</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <h1>📊 Google Play Store Data Analytics</h1>
-    </header>
+/* Base reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    <main>
-        <section id="about">
-            <h2>📁 About the Project</h2>
-            <p>This interactive dashboard showcases insights drawn from Google Play Store data — exploring trends, app performance, and user sentiments.</p>
-        </section>
+body {
+    background-color: #f5f7fa;
+    color: #333;
+    padding: 2rem;
+}
 
-        <section id="data">
-            <h2>📂 Data Used</h2>
-            <p>We're using datasets packed with app information, ratings, categories, and user reviews to discover what makes an app tick.</p>
-        </section>
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    color: #2c3e50;
+}
 
-        <section id="visualization">
-            <h2>📈 Data Visualization</h2>
-            <p>Below are the charts generated from the data analysis:</p>
-            <div id="chart-container">
-                <img src="charts/ratings_distribution.png" alt="Ratings Distribution Graph" class="chart-img">
-                <img src="charts/category_vs_installs.png" alt="Category vs Installs Graph" class="chart-img">
-                <img src="charts/sentiment_analysis.png" alt="User Sentiment Analysis" class="chart-img">
-            </div>
-        </section>
-    </main>
+.chart-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: auto;
+}
 
-    <footer>
-        <p>&copy; 2025 Google Play Store Analytics by Reva</p>
-    </footer>
+.chart-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-    <script src="script.js"></script>
-</body>
-</html>
+.chart-container h2 {
+    margin-bottom: 1rem;
+    color: #34495e;
+    font-size: 1.5rem;
+    text-align: center;
+}
 
+/* Responsive */
+@media (min-width: 768px) {
+    .chart-section {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1024px) {
+    .chart-section {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+/* Plotly chart containers */
+#scatter-plot,
+#choropleth-map,
+#grouped-bar,
+#dual-axis,
+#heatmap,
+#time-series,
+#bubble-chart {
+    width: 100%;
+    height: 400px;
+} 
+
+footer {
+    text-align: center;
+    margin-top: 3rem;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
