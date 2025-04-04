@@ -1,40 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Google Play Store Data Analysis</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
   <style>
     :root {
-      --primary-color: #b084f8;
-      --secondary-color: #ff85c1;
-      --background-light: #f4f4f9;
-      --background-dark: #1e1e2f;
+      --primary-light: #fce4ec;
+      --primary-dark: #1e1e2f;
+      --accent-light: #e1bee7;
+      --accent-dark: #ff99cc;
       --text-light: #333;
-      --text-dark: #f4f4f9;
-      --card-bg-light: rgba(255, 255, 255, 0.6);
-      --card-bg-dark: rgba(0, 0, 0, 0.6);
+      --text-dark: #eee;
+      --card-bg-light: #fff;
+      --card-bg-dark: #2e2e3a;
+      --border-light: #ddd;
+      --border-dark: #444;
+    }
+
+    [data-theme="dark"] {
+      --primary: var(--primary-dark);
+      --accent: var(--accent-dark);
+      --text: var(--text-dark);
+      --card-bg: var(--card-bg-dark);
+      --border: var(--border-dark);
+    }
+
+    [data-theme="light"] {
+      --primary: var(--primary-light);
+      --accent: var(--accent-light);
+      --text: var(--text-light);
+      --card-bg: var(--card-bg-light);
+      --border: var(--border-light);
     }
 
     body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--background-light);
-      color: var(--text-light);
-      transition: background 0.3s, color 0.3s;
-    }
-
-    body.dark-mode {
-      background: var(--background-dark);
-      color: var(--text-dark);
+      background: var(--primary);
+      color: var(--text);
+      transition: all 0.3s ease;
     }
 
     .navbar {
-      background-color: var(--card-bg-light);
+      background-color: var(--card-bg);
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
@@ -43,95 +55,40 @@
       position: sticky;
       top: 0;
       z-index: 1000;
-      backdrop-filter: blur(10px);
-      transition: background 0.3s;
-    }
-
-    body.dark-mode .navbar {
-      background-color: var(--card-bg-dark);
     }
 
     .navbar h2 {
       margin: 0;
-      color: var(--primary-color);
+      color: #b300b3;
     }
 
     .navbar ul {
       list-style: none;
       display: flex;
       gap: 1.5rem;
-      margin: 0;
       padding: 0;
+      margin: 0;
     }
 
     .navbar ul li a {
       text-decoration: none;
-      color: var(--text-light);
+      color: var(--text);
       font-weight: bold;
-      transition: color 0.3s;
-    }
-
-    body.dark-mode .navbar ul li a {
-      color: var(--text-dark);
+      transition: color 0.3s ease;
     }
 
     .navbar ul li a:hover {
-      color: var(--secondary-color);
+      color: #b300b3;
     }
 
-    .toggle-container {
-      display: flex;
-      align-items: center;
-    }
-
-    .toggle-label {
-      margin-right: 0.5rem;
-      font-weight: bold;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 34px;
-      height: 20px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
+    .theme-switch {
       cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--secondary-color);
-      transition: 0.4s;
-      border-radius: 20px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 12px;
-      width: 12px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--primary-color);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(14px);
+      background: #b300b3;
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      transition: background 0.3s ease;
     }
 
     .container {
@@ -146,17 +103,12 @@
     }
 
     .about-section {
-      background: var(--card-bg-light);
+      background: var(--card-bg);
       padding: 2rem;
       border-radius: 10px;
       margin-bottom: 2rem;
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(10px);
-      transition: background 0.3s;
-    }
-
-    body.dark-mode .about-section {
-      background: var(--card-bg-dark);
+      transition: all 0.3s ease;
     }
 
     .search-bar {
@@ -169,44 +121,33 @@
       width: 60%;
       padding: 0.75rem 1rem;
       font-size: 1rem;
-      border: 2px solid #ccc;
+      border: 2px solid var(--border);
       border-radius: 10px;
       outline: none;
-      transition: border-color 0.3s;
-    }
-
-    .search-bar input:focus {
-      border-color: var(--primary-color);
+      transition: all 0.3s ease;
+      background: var(--card-bg);
+      color: var(--text);
     }
 
     .chart-container {
       margin-top: 3rem;
       padding: 2rem;
       border-radius: 20px;
-      background: var(--card-bg-light);
+      background: var(--card-bg);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-      backdrop-filter: blur(10px);
       scroll-margin-top: 100px;
-      transition: background 0.3s, transform 0.3s;
-    }
-
-    body.dark-mode .chart-container {
-      background: var(--card-bg-dark);
-    }
-
-    .chart-container:hover {
-      transform: translateY(-5px);
+      transition: all 0.3s ease;
     }
 
     .footer {
       text-align: center;
       margin-top: 2rem;
       padding-bottom: 2rem;
-      color: #555;
+      color: var(--text);
     }
 
     .footer a {
-      color: var(--primary-color);
+      color: #b300b3;
       font-weight: bold;
       text-decoration: none;
     }
@@ -224,7 +165,91 @@
       <li><a href="#topInstalls">Top Installs</a></li>
       <li><a href="#paidPrice">Paid Prices</a></li>
     </ul>
-    <div class="toggle-container">
-      <span class="toggle-label">Dark Mode
-::contentReference[oaicite:0]{index=0}
- 
+    <button class="theme-switch" onclick="toggleTheme()">🌙</button>
+  </nav>
+
+  <div class="container">
+    <h1>Google Play Store Data Analysis</h1>
+
+    <section id="about" class="about-section">
+      <h2>About This Dashboard</h2>
+      <p>This dashboard presents an interactive analysis of Google Play Store data using visualizations created with Plotly.js. It helps you explore trends in app ratings, categories, installs, and pricing. Scroll through or use the navbar to jump to a specific chart.</p>
+    </section>
+
+    <div class="search-bar">
+      <input type="text" placeholder="Search for categories" />
+    </div>
+
+    <div class="chart-container" id="ratingDist"></div>
+    <div class="chart-container" id="topCategories"></div>
+    <div class="chart-container" id="avgRating"></div>
+    <div class="chart-container" id="topInstalls"></div>
+    <div class="chart-container" id="paidPrice"></div>
+
+    <div class="footer">
+      Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+    }
+
+    Plotly.newPlot('ratingDist', [{
+      x: [4.1, 4.3, 4.7, 3.9, 4.5, 4.8, 3.6],
+      type: 'histogram',
+      marker: { color: '#ff66b3' }
+    }], {
+      title: 'Distribution of App Ratings',
+      xaxis: { title: 'Rating' },
+      yaxis: { title: 'Number of Apps' }
+    });
+
+    Plotly.newPlot('topCategories', [{
+      x: ['Tools', 'Games', 'Education', 'Business', 'Productivity'],
+      y: [230, 190, 160, 150, 130],
+      type: 'bar',
+      marker: { color: '#cc66ff' }
+    }], {
+      title: 'Top Categories by Number of Apps',
+      xaxis: { title: 'Category' },
+      yaxis: { title: 'App Count' }
+    });
+
+    Plotly.newPlot('avgRating', [{
+      x: ['Education', 'Health', 'Music', 'Finance'],
+      y: [4.6, 4.5, 4.4, 4.3],
+      type: 'bar',
+      marker: { color: '#ff99cc' }
+    }], {
+      title: 'Average Rating by Category',
+      xaxis: { title: 'Category' },
+      yaxis: { title: 'Average Rating' }
+    });
+
+    Plotly.newPlot('topInstalls', [{
+      x: ['WhatsApp', 'Instagram', 'Facebook', 'Snapchat'],
+      y: [5000000000, 3500000000, 5000000000, 1000000000],
+      type: 'bar',
+      marker: { color: '#d63384' }
+    }], {
+      title: 'Top Installed Apps',
+      xaxis: { title: 'App Name' },
+      yaxis: { title: 'Install Count' }
+    });
+
+    Plotly.newPlot('paidPrice', [{
+      x: [0.99, 1.99, 2.99, 4.99, 9.99],
+      type: 'histogram',
+      marker: { color: '#e699ff' }
+    }], {
+      title: 'Price Distribution of Paid Apps',
+      xaxis: { title: 'Price (USD)' },
+      yaxis: { title: 'Number of Apps' }
+    });
+  </script>
+</body>
+</html>
