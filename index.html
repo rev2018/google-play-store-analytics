@@ -6,43 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Google Play Store Data Analysis</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary-color: #6a0dad;
-      --secondary-color: #f4f4f9;
-      --text-color: #333;
-      --bg-color: #fff;
-      --card-shadow: rgba(0, 0, 0, 0.05);
-    }
-
-    body.dark-mode {
-      --primary-color: #bb86fc;
-      --secondary-color: #121212;
-      --text-color: #e0e0e0;
-      --bg-color: #1f1f1f;
-      --card-shadow: rgba(255, 255, 255, 0.1);
+      --primary-color: #990099;
+      --secondary-color: #ff66b3;
+      --bg-light: #f4f4f9;
+      --bg-dark: #1a1a1a;
+      --text-light: #333;
+      --text-dark: #f4f4f9;
     }
 
     body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--secondary-color);
-      color: var(--text-color);
+      background: var(--bg-light);
+      color: var(--text-light);
       transition: all 0.3s ease;
     }
 
+    .dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
     .navbar {
-      background-color: var(--bg-color);
+      background-color: #fff;
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 10px var(--card-shadow);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 1000;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode .navbar {
+      background-color: #222;
     }
 
     .navbar h2 {
@@ -58,27 +61,31 @@
 
     .navbar ul li a {
       text-decoration: none;
-      color: var(--text-color);
+      color: var(--text-light);
       font-weight: bold;
       transition: color 0.3s;
+    }
+
+    .dark-mode .navbar ul li a {
+      color: var(--text-dark);
     }
 
     .navbar ul li a:hover {
       color: var(--primary-color);
     }
 
-    .dark-toggle {
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      border: none;
-      background: var(--primary-color);
+    .dark-mode-toggle {
+      background: var(--secondary-color);
       color: #fff;
-      border-radius: 8px;
-      transition: background 0.3s;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
     }
 
-    .dark-toggle:hover {
-      background: #5800a8;
+    .dark-mode-toggle:hover {
+      background: var(--primary-color);
     }
 
     .container {
@@ -87,58 +94,35 @@
       margin: auto;
     }
 
-    h1,
-    h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
     .about-section {
-      background: var(--bg-color);
+      background: #fff;
       padding: 2rem;
       border-radius: 10px;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 15px var(--card-shadow);
-      transition: background 0.3s;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      transition: 0.3s;
     }
 
-    .search-bar {
-      margin: 1rem auto 2rem;
-      display: flex;
-      justify-content: center;
-    }
-
-    .search-bar input {
-      width: 60%;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      outline: none;
-      transition: all 0.3s ease;
+    .dark-mode .about-section {
+      background: #222;
     }
 
     .chart-container {
       margin-top: 3rem;
       padding: 2rem;
       border-radius: 20px;
-      background: var(--bg-color);
-      box-shadow: 0 4px 30px var(--card-shadow);
-      scroll-margin-top: 100px;
-      transition: background 0.3s;
+      background: #fff;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .dark-mode .chart-container {
+      background: #222;
     }
 
     .footer {
       text-align: center;
       margin-top: 2rem;
       padding-bottom: 2rem;
-      color: var(--text-color);
-    }
-
-    .footer a {
-      color: var(--primary-color);
-      font-weight: bold;
-      text-decoration: none;
     }
   </style>
 </head>
@@ -150,94 +134,25 @@
       <li><a href="#about">About</a></li>
       <li><a href="#ratingDist">Ratings</a></li>
       <li><a href="#topCategories">Categories</a></li>
-      <li><a href="#avgRating">Average Ratings</a></li>
-      <li><a href="#topInstalls">Top Installs</a></li>
-      <li><a href="#paidPrice">Paid Prices</a></li>
     </ul>
-    <button class="dark-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">Dark Mode</button>
   </nav>
 
   <div class="container">
-    <h1>Google Play Store Data Analysis</h1>
-
     <section id="about" class="about-section">
       <h2>About This Dashboard</h2>
-      <p>This dashboard presents an interactive analysis of Google Play Store data using visualizations created with Plotly.js. It helps you explore trends in app ratings, categories, installs, and pricing. Scroll through or use the navbar to jump to a specific chart.</p>
+      <p>Interactive analysis of Google Play Store data using Plotly.js.</p>
     </section>
-
-    <div class="search-bar">
-      <input type="text" placeholder="Search for categories" />
-    </div>
-
     <div class="chart-container" id="ratingDist"></div>
-    <div class="chart-container" id="topCategories"></div>
-    <div class="chart-container" id="avgRating"></div>
-    <div class="chart-container" id="topInstalls"></div>
-    <div class="chart-container" id="paidPrice"></div>
-
-    <div class="footer">
-      Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a>
-    </div>
   </div>
 
+  <div class="footer">Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a></div>
+
   <script>
-    const toggleDarkMode = () => {
-      document.body.classList.toggle('dark-mode');
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
     }
-
-    Plotly.newPlot('ratingDist', [{
-      x: [4.1, 4.3, 4.7, 3.9, 4.5, 4.8, 3.6],
-      type: 'histogram',
-      marker: { color: '#bb6bd9' }
-    }], {
-      title: 'Distribution of App Ratings',
-      xaxis: { title: 'Rating' },
-      yaxis: { title: 'Number of Apps' }
-    });
-
-    Plotly.newPlot('topCategories', [{
-      x: ['Tools', 'Games', 'Education', 'Business', 'Productivity'],
-      y: [230, 190, 160, 150, 130],
-      type: 'bar',
-      marker: { color: '#ab47bc' }
-    }], {
-      title: 'Top Categories by Number of Apps',
-      xaxis: { title: 'Category' },
-      yaxis: { title: 'App Count' }
-    });
-
-    Plotly.newPlot('avgRating', [{
-      x: ['Education', 'Health', 'Music', 'Finance'],
-      y: [4.6, 4.5, 4.4, 4.3],
-      type: 'bar',
-      marker: { color: '#f06292' }
-    }], {
-      title: 'Average Rating by Category',
-      xaxis: { title: 'Category' },
-      yaxis: { title: 'Average Rating' }
-    });
-
-    Plotly.newPlot('topInstalls', [{
-      x: ['WhatsApp', 'Instagram', 'Facebook', 'Snapchat'],
-      y: [5000000000, 3500000000, 5000000000, 1000000000],
-      type: 'bar',
-      marker: { color: '#e91e63' }
-    }], {
-      title: 'Top Installed Apps',
-      xaxis: { title: 'App Name' },
-      yaxis: { title: 'Install Count' }
-    });
-
-    Plotly.newPlot('paidPrice', [{
-      x: [0.99, 1.99, 2.99, 4.99, 9.99],
-      type: 'histogram',
-      marker: { color: '#ce93d8' }
-    }], {
-      title: 'Price Distribution of Paid Apps',
-      xaxis: { title: 'Price (USD)' },
-      yaxis: { title: 'Number of Apps' }
-    });
   </script>
 </body>
-
 </html>
+
