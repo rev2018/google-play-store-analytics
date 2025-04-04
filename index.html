@@ -6,6 +6,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Google Play Store Analytics</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    nav {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav ul {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      justify-content: center;
+      margin: 0;
+      padding: 0;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+    #about {
+      padding: 2rem;
+      text-align: center;
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.5;
+    }
+  </style>
 </head>
 
 <body>
@@ -13,6 +49,27 @@
     <h1>Google Play Store Analytics</h1>
     <p>Dive into the trends, ratings, and reviews across apps</p>
   </header>
+
+  <nav>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#scatter-plot">Scatter</a></li>
+      <li><a href="#grouped-bar">Bar</a></li>
+      <li><a href="#dual-axis">Line</a></li>
+      <li><a href="#genre-pie">Pie</a></li>
+      <li><a href="#box-plot">Box</a></li>
+      <li><a href="#downloads-line">Downloads</a></li>
+    </ul>
+  </nav>
+
+  <section id="about">
+    <h2>About This Project</h2>
+    <p>
+      This dashboard visualizes analytics from the Google Play Store dataset. We explore insights like ratings vs reviews,
+      content ratings, genre distribution, download trends and more. All visualizations were built in Python (Colab)
+      using Plotly, and embedded here to deliver an interactive, data-driven web experience.
+    </p>
+  </section>
 
   <main>
     <div class="chart-section">
