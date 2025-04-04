@@ -5,30 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Google Play Store Analytics</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-light: linear-gradient(to bottom right, #ffe3f4, #e5d0ff);
+      --bg-dark: #1a1a2e;
+      --text-light: #2c003e;
+      --text-dark: #f0eaff;
+      --accent-pink: #ff9bc1;
+      --accent-purple: #cda6ff;
+    }
+
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(to bottom right, #ffe3f4, #e5d0ff);
-      color: #2c003e;
+      background: var(--bg-light);
+      color: var(--text-light);
+      transition: background 0.5s ease, color 0.5s ease;
+    }
+
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
     }
 
     header {
-      text-align: center;
       padding: 2rem 1rem;
-      background: linear-gradient(to right, #ff9bc1, #cda6ff);
+      background: linear-gradient(to right, var(--accent-pink), var(--accent-purple));
       color: white;
+      text-align: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     header h1 {
       font-size: 2.5rem;
       margin-bottom: 0.5rem;
+      animation: fadeIn 1.2s ease-in-out;
     }
 
     header p {
       font-size: 1.2rem;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff90;
+      backdrop-filter: blur(5px);
+      padding: 0.8rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      text-decoration: none;
+      color: var(--text-light);
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: var(--accent-purple);
+    }
+
+    .dark-mode nav a {
+      color: var(--text-dark);
+    }
+
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #darkModeToggle {
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .search-bar {
+      margin: 2rem auto;
+      max-width: 400px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border-radius: 30px;
+      border: none;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+      font-size: 1rem;
     }
 
     section {
@@ -52,6 +125,10 @@
       padding: 1rem;
     }
 
+    .dark-mode .chart-container {
+      background: #2f2f48;
+    }
+
     footer {
       background-color: #2c003e;
       color: #fff;
@@ -60,24 +137,30 @@
       margin-top: 3rem;
     }
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      section h2 {
-        font-size: 1.5rem;
-      }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <nav>
+    <div><a href="#">Home</a><a href="#about">About</a><a href="#graphs">Graphs</a></div>
+    <div class="toggle-container">
+      <span id="darkModeToggle">🌙 Toggle Dark Mode</span>
+    </div>
+  </nav>
 
   <header>
     <h1>Google Play Store Analytics</h1>
-    <p>Visualizing trends across apps, installs, and categories</p>
+    <p>Built with sass & graphs by <a href="https://www.linkedin.com/in/your-linkedin-id" target="_blank" style="color: white; text-decoration: underline;">Reva</a></p>
   </header>
 
-  <section>
+  <div class="search-bar">
+    <input type="text" placeholder="Search apps or categories...">
+  </div>
+
+  <section id="graphs">
     <h2>Trendy Graph Vibes</h2>
 
     <div class="chart-container">
@@ -95,11 +178,15 @@
   </section>
 
   <footer>
-    <p>Made with chaos & caffeine by Reva 🌸</p>
+    <p>Made by Reva </p>
   </footer>
 
   <script>
-    // 📊 Graph 1: Bar chart
+    const toggle = document.getElementById('darkModeToggle');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+    });
+
     Plotly.newPlot('graph1', [{
       x: ['Tools', 'Game', 'Productivity', 'Social', 'Finance'],
       y: [300, 240, 180, 150, 100],
@@ -111,19 +198,15 @@
       plot_bgcolor: 'rgba(0,0,0,0)'
     });
 
-    // 📊 Graph 2: Pie chart
     Plotly.newPlot('graph2', [{
       labels: ['Free', 'Paid'],
       values: [4500, 200],
       type: 'pie',
-      marker: {
-        colors: ['#ffb3d1', '#d1b3ff']
-      }
+      marker: { colors: ['#ffb3d1', '#d1b3ff'] }
     }], {
       title: 'App Type Distribution'
     });
 
-    // 📊 Graph 3: Line chart
     Plotly.newPlot('graph3', [{
       x: ['2016', '2017', '2018', '2019', '2020'],
       y: [120, 180, 250, 300, 450],
@@ -136,6 +219,5 @@
       plot_bgcolor: 'rgba(0,0,0,0)'
     });
   </script>
-
 </body>
 </html>
