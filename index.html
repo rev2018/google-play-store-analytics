@@ -5,39 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Play Store Analytics</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Modern font for better look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN for dynamic graphs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
     <header>
-        <h1>📊 Google Play Store Data Analytics</h1>
+        <h1>Google Play Store Analytics Dashboard</h1>
+        <p>Interactive visual insights from our dataset</p>
     </header>
-    
+
     <main>
-        <section id="about">
-            <h2>📁 About the Project</h2>
-            <p>This interactive dashboard explores Google Play Store data to uncover trends, app performance insights, and user review patterns.</p>
-        </section>
-        
-        <section id="data">
-            <h2>📂 Data Used</h2>
-            <p>We analyzed datasets containing app metadata, user ratings, installation numbers, and sentiment-tagged reviews to drive these insights.</p>
-        </section>
-        
-        <section id="visualization">
-            <h2>📈 Data Visualization</h2>
-            <p>Below are interactive charts generated from the analysis:</p>
-            <div id="chart-container"></div>
-        </section>
+        <div class="chart-container" id="scatter-plot"></div>
+        <div class="chart-container" id="choropleth-map"></div>
+        <div class="chart-container" id="grouped-bar"></div>
+        <div class="chart-container" id="dual-axis"></div>
+        <div class="chart-container" id="heatmap"></div>
+        <div class="chart-container" id="time-series"></div>
+        <div class="chart-container" id="bubble-chart"></div>
     </main>
-    
+
     <footer>
-        <p>&copy; 2025 Google Play Store Analytics by Reva</p>
+        <p>&copy; 2025 Google Play Store Analytics Project</p>
     </footer>
 
-    <!-- Custom script for rendering charts -->
     <script src="script.js"></script>
 </body>
 </html>
