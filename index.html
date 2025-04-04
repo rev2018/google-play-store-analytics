@@ -126,7 +126,7 @@
     <div class="chart-container" id="paidPrice"></div>
 
     <div class="footer">
-      Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a>
+      Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a> | Last Updated on <span id="lastUpdatedDate"></span>
     </div>
   </div>
 
@@ -183,6 +183,9 @@
       xaxis: { title: 'Price (USD)' },
       yaxis: { title: 'Number of Apps' }
     });
+
+    // Add today's date to footer
+    document.getElementById("lastUpdatedDate").textContent = new Date().toLocaleDateString();
   </script>
 </body>
 
