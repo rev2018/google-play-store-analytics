@@ -1,58 +1,60 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 import plotly.express as px
 
-# Set wide layout
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Google Play Store Data Analysis", layout="wide")
 
-# Title and styling
-st.markdown("<h1 style='color: #6A1B9A; font-size: 48px;'>📊 Student Performance Analysis</h1>", unsafe_allow_html=True)
-st.markdown("<h4 style='color: gray;'>A dashboard that allows you to explore marks, grades, and patterns in student data.</h4>", unsafe_allow_html=True)
+# Load dataset
+@st.cache_data
+def load_data():
+    url = "https://raw.githubusercontent.com/rev2018/google-play-store-analytics/main/googleplaystore.csv"
+    df = pd.read_csv(url)
+    df.dropna(inplace=True)
+    df['Reviews'] = pd.to_numeric(df['Reviews'], errors='coerce')
+    df['Installs'] = df['Installs'].str.replace('+', '', regex=False).str.replace(',', '', regex=False).astype(int)
+    df['Price'] = df['Price'].str.replace('$', '', regex=False).astype(float)
+    df['Category'] = df['Category'].astype('category')
+    return df
 
-# File uploader
-uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
+df = load_data()
 
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
+st.title("📱 Google Play Store Data Analysis")
+st.markdown("""
+This dashboard analyzes the Google Play Store dataset and provides visual insights into app categories, ratings, reviews, and installations.
+[Open in Colab](https://colab.research.google.com/github/rev2018/google-play-store-analytics/blob/main/google-play-store-analytics.ipynb)
+""")
 
-    # Display the dataframe
-    st.subheader("Dataset Preview 🧾")
-    st.dataframe(df.head(), use_container_width=True)
+st.header("📊 Distribution of App Ratings")
+fig1, ax1 = plt.subplots()
+sns.histplot(df['Rating'], bins=20, kde=True, ax=ax1)
+ax1.set_title('Distribution of App Ratings')
+st.pyplot(fig1)
 
-    st.markdown("---")
+st.header("🏆 Top Categories by Number of Apps")
+top_categories = df['Category'].value_counts().head(10).reset_index()
+top_categories.columns = ['Category', 'App Count']
+fig2 = px.bar(top_categories, x='Category', y='App Count', title='Top 10 Categories by App Count')
+st.plotly_chart(fig2, use_container_width=True)
 
-    # Sidebar filters
-    st.sidebar.header("Filters")
-    selected_subject = st.sidebar.selectbox("Select Subject", df.columns[1:], index=0)
+st.header("⭐ Average Rating by Category")
+avg_rating = df.groupby('Category')['Rating'].mean().sort_values(ascending=False).head(10).reset_index()
+fig3 = px.bar(avg_rating, x='Category', y='Rating', title='Top 10 Categories by Average Rating')
+st.plotly_chart(fig3, use_container_width=True)
 
-    # Grade distribution
-    st.subheader(f"Grade Distribution for {selected_subject}")
-    fig, ax = plt.subplots()
-    df[selected_subject].hist(ax=ax, color='#7B1FA2', bins=10, edgecolor='black')
-    ax.set_xlabel("Marks")
-    ax.set_ylabel("Number of Students")
-    ax.set_title(f"Distribution of Marks in {selected_subject}")
-    st.pyplot(fig)
+st.header("📥 Most Installed Apps")
+top_installed = df.sort_values(by='Installs', ascending=False).head(10)
+fig4 = px.bar(top_installed, x='App', y='Installs', color='Category', title='Top 10 Most Installed Apps')
+st.plotly_chart(fig4, use_container_width=True)
 
-    # Interactive boxplot
-    st.subheader(f"Boxplot for {selected_subject} ✏️")
-    box_fig = px.box(df, y=selected_subject, points="all", color_discrete_sequence=["#BA68C8"])
-    st.plotly_chart(box_fig, use_container_width=True)
+st.header("💰 Price Distribution of Paid Apps")
+paid_apps = df[df['Type'] == 'Paid']
+fig5, ax5 = plt.subplots()
+sns.histplot(paid_apps['Price'], bins=30, ax=ax5)
+ax5.set_xlim(0, 100)
+ax5.set_title('Price Distribution of Paid Apps (Under $100)')
+st.pyplot(fig5)
 
-    # Overall average marks per subject
-    st.subheader("📈 Average Marks per Subject")
-    avg_marks = df.iloc[:, 1:].mean().sort_values(ascending=False)
-    avg_fig = px.bar(avg_marks, labels={'value': 'Average Marks', 'index': 'Subject'}, color=avg_marks.values,
-                     color_continuous_scale='Purples')
-    st.plotly_chart(avg_fig, use_container_width=True)
-
-    # Correlation heatmap
-    st.subheader("Correlation Matrix 🔥")
-    corr_fig = px.imshow(df.iloc[:, 1:].corr(), text_auto=True, color_continuous_scale='RdBu_r')
-    st.plotly_chart(corr_fig, use_container_width=True)
-
-    st.markdown("---")
-    st.markdown("Created with ❤️ by [Reva](https://www.linkedin.com/in/reva-bairwa)")
-else:
-    st.info("👈 Upload a CSV file to get started!")
+st.markdown("---")
+st.markdown("Created with by [Reva](https://www.linkedin.com/in/reva-saxena-61bb33342/)")
