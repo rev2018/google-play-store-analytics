@@ -6,30 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Google Play Store Data Analysis</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-light: #f4f4f9;
-      --bg-dark: #1e1e2f;
-      --text-light: #333;
-      --text-dark: #f4f4f4;
-      --primary: #d17fe0;
-      --accent: #990099;
+    * {
+      scroll-behavior: smooth;
     }
-
     body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: var(--bg-light);
-      color: var(--text-light);
-      transition: background 0.4s ease, color 0.4s ease;
+      background: #f4f4f9;
+      color: #333;
+      transition: background 0.3s ease, color 0.3s ease;
     }
-
-    body.dark-mode {
-      background: var(--bg-dark);
-      color: var(--text-dark);
+    .dark-mode {
+      background: #1e1e2f;
+      color: #f0f0f0;
     }
-
     .navbar {
       background-color: #fff;
       padding: 1rem 2rem;
@@ -42,68 +35,66 @@
       z-index: 1000;
       transition: background 0.3s ease;
     }
-
-    body.dark-mode .navbar {
-      background-color: #2b2b3d;
+    .dark-mode .navbar {
+      background-color: #29293d;
     }
-
     .navbar h2 {
       margin: 0;
-      color: var(--accent);
+      color: #990099;
     }
-
     .navbar ul {
       list-style: none;
       display: flex;
       gap: 1.5rem;
+      margin: 0;
     }
-
     .navbar ul li a {
       text-decoration: none;
-      color: inherit;
+      color: #333;
       font-weight: bold;
       transition: color 0.3s;
     }
-
-    .navbar ul li a:hover {
-      color: var(--accent);
+    .dark-mode .navbar ul li a {
+      color: #fff;
     }
-
+    .navbar ul li a:hover {
+      color: #990099;
+    }
+    .toggle-darkmode {
+      cursor: pointer;
+      font-size: 1rem;
+      background-color: #990099;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      transition: background 0.3s ease;
+    }
     .container {
       padding: 2rem;
       max-width: 1200px;
       margin: auto;
-      animation: fadeIn 1s ease-in;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     h1, h2 {
       text-align: center;
       margin-bottom: 1rem;
     }
-
     .about-section {
       background: #fff;
       padding: 2rem;
       border-radius: 10px;
       margin-bottom: 2rem;
       box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+      transition: background 0.3s ease;
     }
-
-    body.dark-mode .about-section {
-      background: #2a2a3b;
+    .dark-mode .about-section {
+      background: #2d2d44;
     }
-
     .search-bar {
       margin: 1rem auto 2rem;
       display: flex;
       justify-content: center;
     }
-
     .search-bar input {
       width: 60%;
       padding: 0.75rem 1rem;
@@ -111,13 +102,7 @@
       border: 2px solid #ccc;
       border-radius: 10px;
       outline: none;
-      transition: 0.3s ease;
     }
-
-    .search-bar input:focus {
-      border-color: var(--primary);
-    }
-
     .chart-container {
       margin-top: 3rem;
       padding: 2rem;
@@ -125,28 +110,19 @@
       background: #fff;
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
       scroll-margin-top: 100px;
-      transition: background 0.4s ease;
+      transition: background 0.3s ease;
     }
-
-    body.dark-mode .chart-container {
-      background: #2a2a3b;
+    .dark-mode .chart-container {
+      background: #2d2d44;
     }
-
     .footer {
       text-align: center;
       margin-top: 2rem;
       padding-bottom: 2rem;
       color: #555;
     }
-
-    .toggle-mode {
-      cursor: pointer;
-      font-weight: bold;
-      background: var(--accent);
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 10px;
-      border: none;
+    .dark-mode .footer {
+      color: #aaa;
     }
   </style>
 </head>
@@ -161,8 +137,9 @@
       <li><a href="#avgRating">Average Ratings</a></li>
       <li><a href="#topInstalls">Top Installs</a></li>
       <li><a href="#paidPrice">Paid Prices</a></li>
+      <li><a href="#sizeVsRating">Size vs Rating</a></li>
     </ul>
-    <button class="toggle-mode" onclick="toggleDarkMode()">🌙</button>
+    <button class="toggle-darkmode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
   </nav>
 
   <div class="container">
@@ -170,7 +147,7 @@
 
     <section id="about" class="about-section">
       <h2>About This Dashboard</h2>
-      <p>This dashboard gives insights into app trends on the Google Play Store. You’ll find visualizations about app ratings, pricing, installs, and more—all to help uncover the patterns that shape mobile user behavior.</p>
+      <p>This dashboard offers a visual representation of trends, patterns, and statistics from the Google Play Store. You can explore key metrics like ratings, category popularity, install counts, and app pricing, all in one smooth, interactive interface.</p>
     </section>
 
     <div class="search-bar">
@@ -182,9 +159,10 @@
     <div class="chart-container" id="avgRating"></div>
     <div class="chart-container" id="topInstalls"></div>
     <div class="chart-container" id="paidPrice"></div>
+    <div class="chart-container" id="sizeVsRating"></div>
 
     <div class="footer">
-      made by reva
+      Made by Reva
     </div>
   </div>
 
@@ -244,6 +222,17 @@
       title: 'Price Distribution of Paid Apps',
       xaxis: { title: 'Price (USD)' },
       yaxis: { title: 'Number of Apps' }
+    });
+
+    Plotly.newPlot('sizeVsRating', [{
+      x: [12, 25, 33, 40, 50, 62, 70],
+      y: [3.5, 3.8, 4.1, 4.4, 4.2, 4.5, 4.7],
+      mode: 'markers+lines',
+      marker: { color: '#ba55d3', size: 12 }
+    }], {
+      title: 'App Size vs Rating',
+      xaxis: { title: 'App Size (MB)' },
+      yaxis: { title: 'Rating' }
     });
   </script>
 </body>
