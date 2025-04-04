@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Google Play Store Analytics</title>
-  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -49,13 +49,7 @@
       overflow: hidden;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
       background: #fff;
-    }
-
-    iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-      display: block;
+      padding: 1rem;
     }
 
     footer {
@@ -80,35 +74,68 @@
 
   <header>
     <h1>Google Play Store Analytics</h1>
-    <p>Interactive dashboard exploring trends in apps, installs, and ratings</p>
+    <p>Visualizing trends across apps, installs, and categories</p>
   </header>
 
-  <section id="visualizations">
-    <h2>Visualizations</h2>
+  <section>
+    <h2>Trendy Graph Vibes</h2>
 
     <div class="chart-container">
-      <iframe src="graphs/graph1.html" title="Graph 1"></iframe>
+      <div id="graph1"></div>
     </div>
 
     <div class="chart-container">
-      <iframe src="graphs/graph2.html" title="Graph 2"></iframe>
+      <div id="graph2"></div>
     </div>
 
     <div class="chart-container">
-      <iframe src="graphs/graph3.html" title="Graph 3"></iframe>
+      <div id="graph3"></div>
     </div>
-
-    <div class="chart-container">
-      <iframe src="graphs/graph4.html" title="Graph 4"></iframe>
-    </div>
-
-    <!-- Add more iframes below if you generate more graphs -->
 
   </section>
 
   <footer>
-    <p>Created by Reva ✨ | Google Play Store Project</p>
+    <p>Made with chaos & caffeine by Reva 🌸</p>
   </footer>
+
+  <script>
+    // 📊 Graph 1: Bar chart
+    Plotly.newPlot('graph1', [{
+      x: ['Tools', 'Game', 'Productivity', 'Social', 'Finance'],
+      y: [300, 240, 180, 150, 100],
+      type: 'bar',
+      marker: {color: ['#e47dd6', '#c499f3', '#fdaecb', '#d78cff', '#9b79f8']}
+    }], {
+      title: 'Top Categories by App Count',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)'
+    });
+
+    // 📊 Graph 2: Pie chart
+    Plotly.newPlot('graph2', [{
+      labels: ['Free', 'Paid'],
+      values: [4500, 200],
+      type: 'pie',
+      marker: {
+        colors: ['#ffb3d1', '#d1b3ff']
+      }
+    }], {
+      title: 'App Type Distribution'
+    });
+
+    // 📊 Graph 3: Line chart
+    Plotly.newPlot('graph3', [{
+      x: ['2016', '2017', '2018', '2019', '2020'],
+      y: [120, 180, 250, 300, 450],
+      mode: 'lines+markers',
+      type: 'scatter',
+      line: {color: '#c95eff'}
+    }], {
+      title: 'Growth of Total Installs Over Time',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      plot_bgcolor: 'rgba(0,0,0,0)'
+    });
+  </script>
 
 </body>
 </html>
