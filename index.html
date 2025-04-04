@@ -1,32 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Play Store Analytics</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Google Play Store Analytics</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <header>
-        <h1>Google Play Store Analytics Dashboard</h1>
-        <p>Interactive visual insights from our dataset</p>
-    </header>
+  <header>
+    <h1>Google Play Store Analytics</h1>
+    <p>Dive into the trends, ratings, and reviews across apps</p>
+  </header>
 
-    <main>
-        <div class="chart-container" id="scatter-plot"></div>
-        <div class="chart-container" id="choropleth-map"></div>
-        <div class="chart-container" id="grouped-bar"></div>
-        <div class="chart-container" id="dual-axis"></div>
-        <div class="chart-container" id="heatmap"></div>
-        <div class="chart-container" id="time-series"></div>
-        <div class="chart-container" id="bubble-chart"></div>
-    </main>
+  <main>
+    <div class="chart-section">
+      <h2>Scatter Plot - Rating vs Reviews</h2>
+      <div id="scatter-plot" class="chart-box"></div>
+    </div>
 
-    <footer>
-        <p>&copy; 2025 Google Play Store Analytics Project</p>
-    </footer>
+    <div class="chart-section">
+      <h2>Grouped Bar Chart - Content Rating</h2>
+      <div id="grouped-bar" class="chart-box"></div>
+    </div>
 
-    <script src="script.js"></script>
+    <div class="chart-section">
+      <h2>Dual Axis Line Chart - Rating vs Reviews</h2>
+      <div id="dual-axis" class="chart-box"></div>
+    </div>
+
+    <div class="chart-section">
+      <h2>Pie Chart - Genre Distribution</h2>
+      <div id="genre-pie" class="chart-box"></div>
+    </div>
+
+    <div class="chart-section">
+      <h2>Box Plot - Rating Distribution by Category</h2>
+      <div id="box-plot" class="chart-box"></div>
+    </div>
+
+    <div class="chart-section">
+      <h2>Line Chart - App Downloads Over Time</h2>
+      <div id="downloads-line" class="chart-box"></div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Google Play Store Analytics by Reva</p>
+  </footer>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
