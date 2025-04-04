@@ -8,6 +8,7 @@ st.set_page_config(page_title="Google Play Store Data Analysis", layout="wide")
 
 # Load dataset
 @st.cache_data
+
 def load_data():
     url = "https://raw.githubusercontent.com/rev2018/google-play-store-analytics/main/googleplaystore.csv"
     df = pd.read_csv(url)
@@ -21,33 +22,37 @@ def load_data():
 df = load_data()
 
 st.title("📱 Google Play Store Data Analysis")
+
 st.markdown("""
 This dashboard analyzes the Google Play Store dataset and provides visual insights into app categories, ratings, reviews, and installations.
-[Open in Colab](https://colab.research.google.com/github/rev2018/google-play-store-analytics/blob/main/google-play-store-analytics.ipynb)
 """)
 
+# Chart 1: Distribution of App Ratings
 st.header("📊 Distribution of App Ratings")
 fig1, ax1 = plt.subplots()
 sns.histplot(df['Rating'], bins=20, kde=True, ax=ax1)
 ax1.set_title('Distribution of App Ratings')
 st.pyplot(fig1)
 
-st.header("🏆 Top Categories by Number of Apps")
+# Chart 2: Top Categories by Number of Apps
 top_categories = df['Category'].value_counts().head(10).reset_index()
 top_categories.columns = ['Category', 'App Count']
 fig2 = px.bar(top_categories, x='Category', y='App Count', title='Top 10 Categories by App Count')
 st.plotly_chart(fig2, use_container_width=True)
 
+# Chart 3: Average Rating by Category
 st.header("⭐ Average Rating by Category")
 avg_rating = df.groupby('Category')['Rating'].mean().sort_values(ascending=False).head(10).reset_index()
 fig3 = px.bar(avg_rating, x='Category', y='Rating', title='Top 10 Categories by Average Rating')
 st.plotly_chart(fig3, use_container_width=True)
 
+# Chart 4: Most Installed Apps
 st.header("📥 Most Installed Apps")
 top_installed = df.sort_values(by='Installs', ascending=False).head(10)
 fig4 = px.bar(top_installed, x='App', y='Installs', color='Category', title='Top 10 Most Installed Apps')
 st.plotly_chart(fig4, use_container_width=True)
 
+# Chart 5: Price Distribution of Paid Apps
 st.header("💰 Price Distribution of Paid Apps")
 paid_apps = df[df['Type'] == 'Paid']
 fig5, ax5 = plt.subplots()
@@ -55,6 +60,3 @@ sns.histplot(paid_apps['Price'], bins=30, ax=ax5)
 ax5.set_xlim(0, 100)
 ax5.set_title('Price Distribution of Paid Apps (Under $100)')
 st.pyplot(fig5)
-
-st.markdown("---")
-st.markdown("Created with by [Reva](https://www.linkedin.com/in/reva-saxena-61bb33342/)")
