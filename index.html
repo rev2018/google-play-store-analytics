@@ -1,192 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Google Play Store Data Analysis</title>
+  <title>Google Play Store Data Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: 'Poppins', sans-serif;
-      background: #f4f4f9;
-      color: #333;
+      font-family: 'Inter', sans-serif;
+      background-color: #F9FAFB;
+      color: #1F2937;
     }
-    .navbar {
-      background-color: #fff;
+
+    header {
+      background-color: #4F46E5;
       padding: 1rem 2rem;
+      color: white;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
     }
-    .navbar h2 {
+
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
       margin: 0;
-      color: #990099;
     }
-    .navbar ul {
+
+    nav ul {
       list-style: none;
       display: flex;
       gap: 1.5rem;
+      padding: 0;
+      margin: 0;
     }
-    .navbar ul li a {
+
+    nav ul li a {
+      color: white;
       text-decoration: none;
-      color: #333;
-      font-weight: bold;
-      transition: color 0.3s;
+      position: relative;
+      font-weight: 500;
     }
-    .navbar ul li a:hover {
-      color: #990099;
+
+    nav ul li a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: white;
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s;
     }
+
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
     .container {
       padding: 2rem;
-      max-width: 1200px;
-      margin: auto;
     }
-    h1, h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .about-section {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-    }
+
     .search-bar {
-      margin: 1rem auto 2rem;
-      display: flex;
-      justify-content: center;
+      max-width: 400px;
+      margin-bottom: 2rem;
     }
+
     .search-bar input {
-      width: 60%;
-      padding: 0.75rem 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #D1D5DB;
+      border-radius: 8px;
       font-size: 1rem;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      outline: none;
     }
+
     .chart-container {
-      margin-top: 3rem;
-      padding: 2rem;
-      border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-      scroll-margin-top: 100px;
+      margin-bottom: 4rem;
     }
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-      padding-bottom: 2rem;
-      color: #555;
-    }
-    .footer a {
-      color: #990099;
-      font-weight: bold;
-      text-decoration: none;
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
-
 <body>
-  <nav class="navbar">
-    <h2>Playstore Dashboard</h2>
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#ratingDist">Ratings</a></li>
-      <li><a href="#topCategories">Categories</a></li>
-      <li><a href="#avgRating">Average Ratings</a></li>
-      <li><a href="#topInstalls">Top Installs</a></li>
-      <li><a href="#paidPrice">Paid Prices</a></li>
-    </ul>
-  </nav>
+  <header>
+    <h1>Google Play Store Data Dashboard</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Overview</a></li>
+        <li><a href="#">Ratings</a></li>
+        <li><a href="#">Categories</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    <div class="search-bar">
+      <input type="text" placeholder="Search for categories" />
+    </div>
 
-  <div class="container">
-    <h1>📱 Google Play Store Data Analysis</h1>
-
-    <section id="about" class="about-section">
-      <h2>About This Dashboard</h2>
-      <p>This dashboard presents an interactive analysis of Google Play Store data using visualizations created with Plotly.js. It helps you explore trends in app ratings, categories, installs, and pricing. Scroll through or use the navbar to jump to a specific chart!</p>
+    <section class="chart-container">
+      <h2>Rating Distribution</h2>
+      <div id="ratingDist" style="height:400px;"></div>
     </section>
 
-    <div class="search-bar">
-      <input type="text" placeholder="Search for categories or app names... (dummy input)" />
-    </div>
-
-    <div class="chart-container" id="ratingDist"></div>
-    <div class="chart-container" id="topCategories"></div>
-    <div class="chart-container" id="avgRating"></div>
-    <div class="chart-container" id="topInstalls"></div>
-    <div class="chart-container" id="paidPrice"></div>
-
-    <div class="footer">
-      Created by <a href="https://www.linkedin.com/in/reva-saxena-61bb33342/" target="_blank">Reva</a> | Last Updated on <span id="lastUpdatedDate"></span>
-    </div>
-  </div>
+    <section class="chart-container">
+      <h2>Top 5 Paid Apps by Revenue</h2>
+      <div id="topApps" style="height:400px;"></div>
+    </section>
+  </main>
 
   <script>
     Plotly.newPlot('ratingDist', [{
-      x: [4.1, 4.3, 4.7, 3.9, 4.5, 4.8, 3.6],
-      type: 'histogram',
-      marker: { color: '#ff66b3' }
+      x: [1, 2, 3, 4, 5],
+      y: [100, 200, 300, 150, 250],
+      type: 'bar',
+      marker: { color: '#4F46E5' },
+      hoverlabel: { bgcolor: '#4F46E5', font: { color: '#fff' } }
     }], {
-      title: 'Distribution of App Ratings',
+      title: 'App Rating Distribution',
       xaxis: { title: 'Rating' },
       yaxis: { title: 'Number of Apps' }
     });
 
-    Plotly.newPlot('topCategories', [{
-      x: ['Tools', 'Games', 'Education', 'Business', 'Productivity'],
-      y: [230, 190, 160, 150, 130],
+    Plotly.newPlot('topApps', [{
+      x: ['Spotify', 'Minecraft', 'Nova Launcher', 'Tasker', 'Kinemaster'],
+      y: [5000000, 3000000, 2000000, 1500000, 1200000],
       type: 'bar',
-      marker: { color: '#cc66ff' }
+      marker: { color: '#4F46E5' },
+      hoverlabel: { bgcolor: '#4F46E5', font: { color: '#fff' } }
     }], {
-      title: 'Top Categories by Number of Apps',
-      xaxis: { title: 'Category' },
-      yaxis: { title: 'App Count' }
+      title: 'Top 5 Paid Apps by Revenue',
+      xaxis: { title: 'App' },
+      yaxis: { title: 'Revenue ($)' }
     });
-
-    Plotly.newPlot('avgRating', [{
-      x: ['Education', 'Health', 'Music', 'Finance'],
-      y: [4.6, 4.5, 4.4, 4.3],
-      type: 'bar',
-      marker: { color: '#ff99cc' }
-    }], {
-      title: 'Average Rating by Category',
-      xaxis: { title: 'Category' },
-      yaxis: { title: 'Average Rating' }
-    });
-
-    Plotly.newPlot('topInstalls', [{
-      x: ['App A', 'App B', 'App C', 'App D'],
-      y: [5000000, 4800000, 4700000, 4600000],
-      type: 'bar',
-      marker: { color: '#d63384' }
-    }], {
-      title: 'Top Installed Apps',
-      xaxis: { title: 'App Name' },
-      yaxis: { title: 'Install Count' }
-    });
-
-    Plotly.newPlot('paidPrice', [{
-      x: [0.99, 1.99, 2.99, 4.99, 9.99],
-      type: 'histogram',
-      marker: { color: '#e699ff' }
-    }], {
-      title: 'Price Distribution of Paid Apps',
-      xaxis: { title: 'Price (USD)' },
-      yaxis: { title: 'Number of Apps' }
-    });
-
-    // Add today's date to footer
-    document.getElementById("lastUpdatedDate").textContent = new Date().toLocaleDateString();
   </script>
 </body>
-
 </html>
